@@ -1,15 +1,21 @@
 package ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.GithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.navigation.UScreens
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.list.IUsersListPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.IUserItemView
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.Constants
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
+class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val screens: UScreens) :
     MvpPresenter<UsersView>() {
+
+    val TAG = "HW " + UsersPresenter::class.java.simpleName
 
     class UsersListPresenter : IUsersListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -31,7 +37,13 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) :
         loadData()
 
         usersListPresenter.itemClickListener = { view ->
-            val user = usersListPresenter.users[view.pos]
+            val login = usersListPresenter.users[view.pos].toString()
+
+            if (Constants.DEBUG) {
+            Log.v(TAG, "login $login ")
+            }
+
+            router.navigateTo(screens.user(login))
             //router.navigateTo(screens.user(user))
         }
     }
