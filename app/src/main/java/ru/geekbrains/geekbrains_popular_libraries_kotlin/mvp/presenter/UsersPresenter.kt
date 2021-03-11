@@ -1,6 +1,5 @@
 package ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
@@ -37,14 +36,13 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
         loadData()
 
         usersListPresenter.itemClickListener = { view ->
-            val login = usersListPresenter.users[view.pos].toString()
+            val login = usersListPresenter.users[view.pos]
 
             if (Constants.DEBUG) {
-            Log.v(TAG, "login $login ")
+                Log.v(TAG, "login $login ")
             }
 
             router.navigateTo(screens.user(login))
-            //router.navigateTo(screens.user(user))
         }
     }
 
