@@ -14,14 +14,19 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.BackClickListener
 
 class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickListener {
 
-    private var login: GithubUser = GithubUser("No login")
-
     companion object {
-        fun newInstance(login: GithubUser) = UserScreenFragment()
+        private const val USER_ARG = "user"
+
+        fun newInstance(user: GithubUser) = UserScreenFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(USER_ARG, user)
+            }
+        }
     }
 
-    private val presenter by moxyPresenter {
-        UserScreenPresenter(login, App.instance.router)
+    private val presenter: UserScreenPresenter by moxyPresenter {
+        val user = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
+        UserScreenPresenter(user, App.instance.router)
     }
 
     private var vb: FragmentUserScreenBinding? = null
@@ -42,7 +47,7 @@ class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickLi
     override fun backPressed() = presenter.backClick()
 
     override fun addText(login: String) {
-        vb?.textLogin?.setText(login)
+        vb?.textLogin?.text = login
     }
 
 }

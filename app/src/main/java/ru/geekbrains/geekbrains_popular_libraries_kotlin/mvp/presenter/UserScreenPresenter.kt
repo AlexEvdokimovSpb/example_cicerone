@@ -5,12 +5,12 @@ import moxy.MvpPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UserScreenView
 
-class UserScreenPresenter(val login: GithubUser, val router: Router) :
+class UserScreenPresenter(val user: GithubUser, val router: Router) :
     MvpPresenter<UserScreenView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.addText(login.toString())
+        viewState.addText(user.login)
     }
 
     fun backClick(): Boolean {
