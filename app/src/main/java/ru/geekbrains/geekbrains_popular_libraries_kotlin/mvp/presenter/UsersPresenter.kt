@@ -47,10 +47,11 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
     }
 
     fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.clear()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+        usersRepo.getUsers().subscribe() {
+            usersListPresenter.users.clear()
+            usersListPresenter.users.addAll(it)
+            viewState.updateList()
+        }
     }
 
     fun backClick(): Boolean {
