@@ -2,16 +2,17 @@ package ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.GithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.IGithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.navigation.IScreens
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.list.IUsersListPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.IUserItemView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.Constants
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val screens: IScreens) :
+class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router, val screens: IScreens) :
     MvpPresenter<UsersView>() {
 
     val TAG = "HW " + UsersPresenter::class.java.simpleName
@@ -23,6 +24,7 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
         override fun bindView(view: IUserItemView) {
             val user = users[view.pos]
             view.setLogin(user.login)
+            view.loadAvatar(user.avatarUrl)
         }
 
         override fun getCount() = users.size
@@ -47,11 +49,15 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
     }
 
     fun loadData() {
-        usersRepo.getUsers().subscribe() {
-            usersListPresenter.users.clear()
-            usersListPresenter.users.addAll(it)
-            viewState.updateList()
-        }
+        usersRepo.getUsers()
+            .observeOn(uiScheduler)
+            .subscribe({ repos ->
+                usersListPresenter.users.clear()
+                usersListPresenter.users.addAll(repos)
+                viewState.updateList()
+            }, {
+                println("Error: ${it.message}")
+            })
     }
 
     fun backClick(): Boolean {

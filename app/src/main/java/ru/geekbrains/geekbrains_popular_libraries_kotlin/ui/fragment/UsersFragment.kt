@@ -4,15 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.databinding.FragmentUsersBinding
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.GithubUsersRepo
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.api.ApiHolder
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitGithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.UsersPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.App
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.BackClickListener
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.adapter.UsersRVAdapter
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.image.GlideImageLoader
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.navigation.AndroidScreens
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
@@ -21,8 +24,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
         fun newInstance() = UsersFragment()
     }
 
-    private val presenter by moxyPresenter {
-        UsersPresenter(GithubUsersRepo(), App.instance.router, AndroidScreens())
+    val presenter: UsersPresenter by moxyPresenter {
+        UsersPresenter(
+            AndroidSchedulers.mainThread(),
+            RetrofitGithubUsersRepo(ApiHolder.api),
+            App.instance.router,
+            AndroidScreens()
+        )
     }
 
     private var vb: FragmentUsersBinding? = null
@@ -43,7 +51,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
     override fun init() {
         vb?.rvUsers?.layoutManager = LinearLayoutManager(requireContext())
-        adapter = UsersRVAdapter(presenter.usersListPresenter)
+        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
         vb?.rvUsers?.adapter = adapter
     }
 
@@ -52,5 +60,4 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
     }
 
     override fun backPressed() = presenter.backClick()
-
 }
