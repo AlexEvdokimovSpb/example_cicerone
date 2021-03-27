@@ -3,14 +3,20 @@ package ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.databinding.FragmentUserScreenBinding
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.api.ApiHolder
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitUserRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.UserScreenPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UserScreenView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.App
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.BackClickListener
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.adapter.ReposAdapter
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.navigation.AndroidScreens
 
 class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickListener {
 
@@ -26,10 +32,17 @@ class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickLi
 
     private val presenter: UserScreenPresenter by moxyPresenter {
         val user = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
-        UserScreenPresenter(user, App.instance.router)
+        UserScreenPresenter(
+            user,
+            App.instance.router,
+            RetrofitUserRepo(ApiHolder.api),
+            AndroidSchedulers.mainThread(),
+            AndroidScreens()
+        )
     }
 
     private var vb: FragmentUserScreenBinding? = null
+    private var adapter: ReposAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +51,16 @@ class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickLi
     ) = FragmentUserScreenBinding.inflate(inflater, container, false).also {
         vb = it
     }.root
+
+    override fun init() {
+        vb?.rvRepos?.layoutManager = LinearLayoutManager(requireContext())
+        adapter = ReposAdapter(presenter.userReposListPresenter)
+        vb?.rvRepos?.adapter = adapter
+    }
+
+    override fun updateList() {
+        adapter?.notifyDataSetChanged()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

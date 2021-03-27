@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Popular Libraries</string>
     <string name="hello_login">Hello_login!</string>
+    <string name="name">name</string>
+    <string name="forks">forks</string>
+    <string name="description">description</string>
 </resources>
