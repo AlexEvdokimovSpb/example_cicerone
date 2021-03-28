@@ -10,6 +10,7 @@ import moxy.ktx.moxyPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.databinding.FragmentUserScreenBinding
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.api.ApiHolder
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.room.db.Database
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitUserRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.UserScreenPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UserScreenView
@@ -17,6 +18,7 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.App
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.BackClickListener
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.adapter.ReposAdapter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.navigation.AndroidScreens
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.network.AndroidNetworkStatus
 
 class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickListener {
 
@@ -35,7 +37,11 @@ class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickLi
         UserScreenPresenter(
             user,
             App.instance.router,
-            RetrofitUserRepo(ApiHolder.api),
+            RetrofitUserRepo(
+                ApiHolder.api,
+                AndroidNetworkStatus(App.instance),
+                Database.getInstance()
+            ),
             AndroidSchedulers.mainThread(),
             AndroidScreens()
         )
