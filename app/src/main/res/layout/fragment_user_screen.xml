@@ -5,11 +5,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.UserScreenFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/text_login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/padding"
         android:text="@string/hello_login"
         android:textSize="@dimen/login_size" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_repos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -4,8 +4,6 @@ import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
 @AddToEndSingle
-interface UserScreenView : MvpView {
-    fun addText(login: String)
-    fun init()
-    fun updateList()
+interface RepoForksView : MvpView {
+    fun addText(forks: String)
 }

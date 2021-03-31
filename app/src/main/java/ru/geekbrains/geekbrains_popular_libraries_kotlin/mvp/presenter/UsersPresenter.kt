@@ -12,7 +12,12 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.IUserItemView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.Constants
 
-class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router, val screens: IScreens) :
+class UsersPresenter(
+    val uiScheduler: Scheduler,
+    val usersRepo: IGithubUsersRepo,
+    val router: Router,
+    val screens: IScreens
+) :
     MvpPresenter<UsersView>() {
 
     val TAG = "HW " + UsersPresenter::class.java.simpleName
