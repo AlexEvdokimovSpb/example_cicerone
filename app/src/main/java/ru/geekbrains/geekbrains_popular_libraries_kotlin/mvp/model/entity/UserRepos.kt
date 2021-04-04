@@ -5,9 +5,10 @@ import com.google.gson.annotations.Expose
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class GithubUser(
+data class UserRepos(
     @Expose val id: String,
-    @Expose val login: String,
-    @Expose val avatarUrl: String,
-    @Expose val reposUrl: String?
+    @Expose val name: String?,
+    @Expose val description: String?,
+    @Expose val forks: Int?,
+    @Expose val url: String?
 ) : Parcelable
