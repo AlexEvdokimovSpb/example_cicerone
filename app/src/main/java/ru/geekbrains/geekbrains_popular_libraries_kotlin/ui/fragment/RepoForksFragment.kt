@@ -27,7 +27,7 @@ class RepoForksFragment() : MvpAppCompatFragment(), RepoForksView, BackClickList
     private val presenter: RepoForksPresenter by moxyPresenter {
         val forks = arguments?.getParcelable<UserRepos>(FORKS_ARG) as UserRepos
         RepoForksPresenter(forks).apply {
-            App.instance.appComponent.inject(this)
+            App.instance.repositorySubcomponent?.inject(this)
         }
     }
 

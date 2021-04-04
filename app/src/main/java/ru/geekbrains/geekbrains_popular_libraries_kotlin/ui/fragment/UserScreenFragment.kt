@@ -29,7 +29,7 @@ class UserScreenFragment() : MvpAppCompatFragment(), UserScreenView, BackClickLi
     private val presenter: UserScreenPresenter by moxyPresenter {
         val user = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
         UserScreenPresenter(user).apply {
-            App.instance.appComponent.inject(this)
+            App.instance.initRepositorySubcomponent()?.inject(this)
         }
     }
 

@@ -22,7 +22,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
     val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter().apply {
-            App.instance.appComponent.inject(this)
+            App.instance.iniUserSubcomponent().inject(this)
         }
     }
 
@@ -44,7 +44,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
     override fun init() {
         vb?.rvUsers?.layoutManager = LinearLayoutManager(requireContext())
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader()).apply {
+            App.instance.appComponent.userSubcomponent().inject(this)
+        }
         vb?.rvUsers?.adapter = adapter
     }
 

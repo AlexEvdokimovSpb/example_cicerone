@@ -1,21 +1,26 @@
-package ru.geekbrains.geekbrains_popular_libraries_kotlin.di.module
+package ru.geekbrains.geekbrains_popular_libraries_kotlin.di.user.module
 
 import dagger.Module
 import dagger.Provides
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.di.user.IUserScopeContainer
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.di.user.UserScope
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.api.IDataSource
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.cache.IUserReposCache
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.cache.IUsersCache
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.cache.RoomGithubUsersCache
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.room.db.Database
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.network.INetworkStatus
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.IGithubUsersRepo
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.IUserRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitGithubUsersRepo
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitUserRepo
-import javax.inject.Singleton
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.App
 
 @Module
-class RepoModule {
+class UserModule {
 
-    @Singleton
+    @UserScope
+    @Provides
+    fun usersCache(database: Database): IUsersCache = RoomGithubUsersCache(database)
+
+    @UserScope
     @Provides
     fun usersRepo(
         api: IDataSource,
@@ -23,12 +28,7 @@ class RepoModule {
         cache: IUsersCache
     ): IGithubUsersRepo = RetrofitGithubUsersRepo(api, networkStatus, cache)
 
-    @Singleton
+    @UserScope
     @Provides
-    fun userRepo(
-        api: IDataSource,
-        networkStatus: INetworkStatus,
-        cache: IUserReposCache
-    ): IUserRepo = RetrofitUserRepo(api, networkStatus, cache)
-
+    fun userScopeContainer(app: App): IUserScopeContainer = app
 }
