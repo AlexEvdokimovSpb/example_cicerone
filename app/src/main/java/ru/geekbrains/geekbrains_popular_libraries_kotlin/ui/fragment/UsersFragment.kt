@@ -4,22 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.databinding.FragmentUsersBinding
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.api.ApiHolder
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.cache.RoomGithubUsersCache
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.room.db.Database
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.RetrofitGithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.UsersPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.App
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.BackClickListener
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.adapter.UsersRVAdapter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.image.GlideImageLoader
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.navigation.AndroidScreens
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.network.AndroidNetworkStatus
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
@@ -28,16 +21,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
     }
 
     val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter(
-            AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(App.instance),
-                RoomGithubUsersCache(Database.getInstance())
-            ),
-            App.instance.router,
-            AndroidScreens()
-        )
+        UsersPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private var vb: FragmentUsersBinding? = null

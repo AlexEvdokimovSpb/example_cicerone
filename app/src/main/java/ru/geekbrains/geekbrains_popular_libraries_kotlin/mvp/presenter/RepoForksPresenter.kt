@@ -4,11 +4,14 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.UserRepos
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.RepoForksView
-import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UserScreenView
+import javax.inject.Inject
 
 class RepoForksPresenter(
-    val userRepos: UserRepos, val router: Router
+   val userRepos: UserRepos
 ) : MvpPresenter<RepoForksView>() {
+
+    @Inject
+    lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

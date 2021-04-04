@@ -11,14 +11,23 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.list.IUse
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UsersView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.IUserItemView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.ui.Constants
+import javax.inject.Inject
+import javax.inject.Named
 
-class UsersPresenter(
-    val uiScheduler: Scheduler,
-    val usersRepo: IGithubUsersRepo,
-    val router: Router,
-    val screens: IScreens
-) :
-    MvpPresenter<UsersView>() {
+class UsersPresenter() : MvpPresenter<UsersView>() {
+
+    @Inject
+    @field:Named("uiScheduler")
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var usersRepo: IGithubUsersRepo
+
+    @Inject
+    lateinit var screens: IScreens
+
+    @Inject
+    lateinit var router: Router
 
     val TAG = "HW " + UsersPresenter::class.java.simpleName
 

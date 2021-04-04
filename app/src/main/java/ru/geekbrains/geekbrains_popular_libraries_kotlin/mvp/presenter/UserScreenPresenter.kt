@@ -10,11 +10,25 @@ import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.navigation.IScreens
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter.list.IReposListPresenter
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.UserScreenView
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.view.list.IUserRepoItemView
+import javax.inject.Inject
+import javax.inject.Named
 
 class UserScreenPresenter(
-    val user: GithubUser, val router: Router, val usersRepo: IUserRepo,
-    val uiScheduler: Scheduler, val screens: IScreens
+    val user: GithubUser
 ) : MvpPresenter<UserScreenView>() {
+
+    @Inject
+    @field:Named("uiScheduler")
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screens: IScreens
+
+    @Inject
+    lateinit var usersRepo: IUserRepo
 
     class UserReposListPresenter : IReposListPresenter {
         val userRepos = mutableListOf<UserRepos>()
