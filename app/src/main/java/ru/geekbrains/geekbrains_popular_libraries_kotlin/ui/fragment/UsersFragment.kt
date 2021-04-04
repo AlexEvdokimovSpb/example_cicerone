@@ -22,7 +22,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
     val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter().apply {
-            App.instance.iniUserSubcomponent().inject(this)
+            App.instance.initUserSubcomponent().inject(this)
         }
     }
 

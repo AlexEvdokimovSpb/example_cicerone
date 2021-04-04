@@ -4,6 +4,7 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.di.user.IUserScopeContainer
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.IGithubUsersRepo
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.navigation.IScreens
@@ -15,6 +16,9 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UsersPresenter() : MvpPresenter<UsersView>() {
+
+    @Inject
+    lateinit var userScopeContainer: IUserScopeContainer
 
     @Inject
     @field:Named("uiScheduler")
@@ -77,5 +81,10 @@ class UsersPresenter() : MvpPresenter<UsersView>() {
     fun backClick(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        userScopeContainer.releaseUserScope()
+        super.onDestroy()
     }
 }

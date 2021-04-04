@@ -34,7 +34,7 @@ class App : Application(),
             .build()
     }
 
-    fun iniUserSubcomponent() = appComponent.userSubcomponent().also {
+    fun initUserSubcomponent() = appComponent.userSubcomponent().also {
         userSubcomponent = it
     }
 

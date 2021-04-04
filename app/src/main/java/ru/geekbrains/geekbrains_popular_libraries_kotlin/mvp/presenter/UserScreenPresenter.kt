@@ -3,6 +3,7 @@ package ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.presenter
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
+import ru.geekbrains.geekbrains_popular_libraries_kotlin.di.repository.IRepositoryScopeContainer
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.GithubUser
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.entity.UserRepos
 import ru.geekbrains.geekbrains_popular_libraries_kotlin.mvp.model.repo.IUserRepo
@@ -16,6 +17,9 @@ import javax.inject.Named
 class UserScreenPresenter(
     val user: GithubUser
 ) : MvpPresenter<UserScreenView>() {
+
+    @Inject
+    lateinit var repositoryScopeContainer: IRepositoryScopeContainer
 
     @Inject
     @field:Named("uiScheduler")
@@ -72,5 +76,10 @@ class UserScreenPresenter(
     fun backClick(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        repositoryScopeContainer.releaseRepositoryScope()
+        super.onDestroy()
     }
 }
